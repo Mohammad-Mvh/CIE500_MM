@@ -5,65 +5,77 @@ from itertools import combinations
 import matplotlib.pyplot as plt
 import numpy as np
 
-# In the following script we are going to generate a random graph
+# In the following script a random and a distance-based graphs are generated.
 
-## First, we generate 8 random nodes in the horizontal space (0,2) and vertical space (0,4)
-random.seed(66)
-pos = [(random.random() * 10.0, random.random() * 10.0) for _ in range(10)]
+## First, 50 random nodes in the horizontal space (0,100) and vertical space (0,100) are created.
+random.seed(100)
+pos = [(random.random() * 100.0, random.random() * 100.0) for _ in range(50)]
 
-## Second, we create an edge list by a given probability.
-edge_list = []
-for node_pair in combinations(list(range(10)), 2):
+## For the first graph, the edge list is defined based on a given probability for each node pair.
+edge_list1 = []
+for node_pair in combinations(list(range(50)), 2):
     exist_prob = random.random()
     if exist_prob < 0.4:
-        edge_list.append(node_pair)
+        edge_list1.append(node_pair)
     else:
         continue
-print(edge_list)
-## Now, we can create the graph based on the positions and edge list.
+#print(edge_list)
 
-G = nx.from_edgelist(edge_list, create_using=nx.DiGraph)
+## For the second graph, the edge list is defined based on a given distance between the all node pairs.
+edge_list2 = []
+for node_pair in combinations(list(range(50)), 2):
+    distance = np.sqrt((pos[node_pair[0]][0] - pos[node_pair[1]][0]) ** 2 + (pos[node_pair[0]][1] - pos[node_pair[1]][1]) ** 2)
+    if distance < 30:
+        edge_list2.append(node_pair)
+    else:
+        continue
 
-# Now let's add a self-loop to the network
-G.add_edge(4, 4)
-G.add_edge(2, 2)
 
-G.add_edge(1,9)
-G.add_edge(9,1)
+## The graphs are created (random or distance-based) as directed and undirected.
+
+G1 = nx.from_edgelist(edge_list2, create_using=nx.Graph)
+G2 = nx.from_edgelist(edge_list2, create_using=nx.DiGraph)
+
+## Self-loops are added to the directed graph randomly
+for node in G2.nodes:
+    self_loop_prob = random.random()
+    if self_loop_prob < 0.4:
+        G2.add_edge(node, node)
+    else:
+        continue
+
+## Both graohs are plotted.
 
 fig, ax = plt.subplots()
-nx.draw_networkx(G, pos=pos, with_labels=True, ax=ax)
+nx.draw_networkx(G1, pos=pos, with_labels=True, ax=ax)
 plt.tight_layout()
 ax.set_aspect("equal")  # set the equal scale of horizontal and vertical
 ax.axis("off")  # remove the frame of the generated figure
 plt.savefig(
-    "C:\\Users\\moham\\OneDrive\\Desktop\\Ph.D\\Courses\\AI in UWI\\CIE500_MM\\week3\\examplegraph.jpg",
+    "C:\\Users\\moham\\OneDrive\\Desktop\\Ph.D\\Courses\\AI in UWI\\CIE500_MM\\week3\\Graph.jpg",
     dpi=300,
     bbox_inches="tight",
 )
 
 
-
-
-A = nx.adjacency_matrix(G).toarray()
-print(A)
-
-
-
 fig, ax = plt.subplots()
-nx.draw_networkx(G, pos=pos, with_labels=True, ax=ax, arrows=True, arrowstyle="<|-", style="dashed")
+nx.draw_networkx(G2, pos=pos, with_labels=True, ax=ax, arrows=True, arrowstyle="<|-")
 plt.tight_layout()
 ax.set_aspect("equal")  # set the equal scale of horizontal and vertical
 ax.axis("off")  # remove the frame of the generated figure
 plt.savefig(
-    "C:\\Users\\moham\\OneDrive\\Desktop\\Ph.D\\Courses\\AI in UWI\\CIE500_MM\\week3\\examplegraph2.jpg",
+    "C:\\Users\\moham\\OneDrive\\Desktop\\Ph.D\\Courses\\AI in UWI\\CIE500_MM\\week3\\DiGraph.jpg",
     dpi=300,
     bbox_inches="tight",
 )
 
-# Finally, we can get the edgelist and adjancency matrix from Graph directly.
-
-#print(f"The adjancency matrix of G is \n {nx.adjacency_matrix(G).toarray()}")
-
-#print(f"The edge list of G is \n {nx.to_edgelist(G)}")
-# %%
+## The directed and undirected graph are compared by checking the adjacency matrices.
+A1 = nx.adjacency_matrix(G1).toarray()
+A2 = nx.adjacency_matrix(G2).toarray()
+D = np.transpose(A2) + A2 - A1 
+np.fill_diagonal(D, 0)
+# If every element in D is zero, then the directed graph is the same as the undirected graph.
+if np.sum(D) == 0:
+    print("The second graph is the directed version of first graph.")
+else:
+    print("The second graph is not the directed version of first graph.")
