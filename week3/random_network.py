@@ -44,7 +44,7 @@ for node in G2.nodes:
     else:
         continue
 
-## Both graohs are plotted.
+## Both graphs are plotted.
 
 fig, ax = plt.subplots()
 nx.draw_networkx(G1, pos=pos, with_labels=True, ax=ax)
