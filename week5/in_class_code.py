@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Read the data
-river_data = gpd.read_file("C:\\Users\\moham\\OneDrive\\Desktop\\PhD\\Courses\\UWI\\CIE500_MM\\week5\\rivernetwork\\networkoregon.shp")
+river_data = gpd.read_file("C:\\Users\\moham\\OneDrive\\Desktop\\PhD\\Courses\\AIinUWI\\CIE500_MM\\week5\\rivernetwork\\networkoregon.shp")
 river_data.plot()
 
 river_data_exploded = river_data.explode(
