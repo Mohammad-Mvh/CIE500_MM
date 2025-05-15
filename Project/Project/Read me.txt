@@ -1,0 +1,12 @@
+The project includes three folders:
+a) The Data folder contains the downloaded .inp SWMM files for modeling. To reduce the size of the file, the DEM  is not included but can be downloaded from 'https://data.dtu.dk/articles/dataset/Ortho-photo_Digital_Terrain_Model_etc_/12513269'.
+b) The QGIS folder contains the GIS data for visualization.
+c) The Code folder contains all the developed code for the project. Comments are provided for all the scripts, whether Python or MATLAB. To reproduce the results, please follow the below instructions:
+
+1) First, open and execute the MATLAB script named Bathtub.m, located in the Bathtub folder. The code will use the storm surge scenarios to generate and save equivalent rainfall time series in RainfallTimeSeries.csv.
+2) Open the Model_modification Python script. this code will modify the model according to the details provided in the report.
+3) Move the RainfallTimeSeries.csv file obtained from step one to the parent folder.
+4) Open and run Model_simulation.py. This Python script conducts the drainage network simulations for all rainfall scenarios and saves the results in folder outfall_flow_results_csv.
+5) Create a new Excel file named OutfallTimeSeries and copy the simulation results into this file such that each sheet contains the results for one outfall and its name corresponds to the outfall name.
+6) Move the OutfallTimeSeries.xlsx file to the parent folder and open the GCN Python script. This code develops the GNN, trains and tests it.
+7) Another Python script is also written to visualize the drainage network graph and determine its characteristics in Graph_visualization.
